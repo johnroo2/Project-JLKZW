@@ -16,6 +16,7 @@ export default function Index() {
   const [focusId, setFocusId] = useState<null | string>(null);
   const [existingFileList, setExistingFileList] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [modalLoading, setModalLoading] = useState<boolean>(false);
   const [data, setData] = useState<any[]>([]);
   const [form] = useForm();
 
@@ -49,7 +50,6 @@ export default function Index() {
     setLoading(true)
     try{
       const res = await axios.get("/api/listings")
-      console.log(res.data.response)
       setData(res.data.response)
     }
     catch(err){
@@ -59,6 +59,7 @@ export default function Index() {
   }
 
   const handleSubmit = async (formValues: any) => {
+    setModalLoading(true);
     try {
       const formData = new FormData();
       formData.append('name', formValues.name);
@@ -79,15 +80,19 @@ export default function Index() {
       message.error(`Failed to submit: ${formValues.name}`);
       console.error(err);
     }
-    setOpen(false);
-    setEditing(false);
-    setFocus(null);
-    setFocusId(null);
-    setExistingFileList([]);
-    fetch();
+    finally{
+      setOpen(false);
+      setEditing(false);
+      setFocus(null);
+      setFocusId(null);
+      setExistingFileList([]);
+      setModalLoading(false)
+      fetch();
+    }
   };
 
   const handleEdit = async (formvalues: any) => {
+    setModalLoading(true)
     try {
       const formData = new FormData();
       formData.append('name', formvalues.name);
@@ -111,12 +116,15 @@ export default function Index() {
       message.error(`Failed to modify: ${formvalues.name}`);
       console.log(err); 
     }
-    setOpen(false);
-    setEditing(false);
-    setFocus(null);
-    setFocusId(null);
-    setExistingFileList([]);
-    fetch();
+    finally{
+      setOpen(false);
+      setEditing(false);
+      setFocus(null);
+      setFocusId(null);
+      setExistingFileList([]);
+      setModalLoading(false)
+      fetch();
+    }
   };
 
   const handleDelete = async(id:any, title:string) => {
@@ -214,6 +222,12 @@ export default function Index() {
         <Title level={3}>
           {editing ? "Modify" : "Create New"} Listing
         </Title>
+        {modalLoading ? 
+        <div className="flex flex-col gap-4 items-center justify-center h-full">
+          <Spin size="large"/>
+          Uploading...
+        </div>
+        :
         <Form form={form} layout="vertical" onFinish={editing ? handleEdit : handleSubmit}>
           <Row gutter={[0, 0]}>
             <Col span={24}>
@@ -240,7 +254,7 @@ export default function Index() {
               {editing ? "Modify" : "Create"} Listing
             </Button>
           </Row>
-        </Form>
+        </Form>}
       </Col>
     </Modal> 
     </>
