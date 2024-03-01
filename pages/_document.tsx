@@ -4,7 +4,10 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head />
-      <body className="cotton-candy">
+      <body className="relative cotton-candy">
+        <div className="absolute inset-0 dots">
+
+        </div>
         <Main />
         <NextScript />
       </body>

@@ -130,7 +130,7 @@ export default function Index() {
 
   return (
     <>
-    <div className="overflow-hidden flex mx-[15vw] h-[90vh] mt-[5vh]">
+    <div className="overflow-hidden flex mx-[15vw] h-[90vh] mt-[5vh]" data-aos="fade-down">
       <Card className="w-full h-full p-8">
         <div className="grid"
         style={{

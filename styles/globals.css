@@ -2,9 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-:root{
+.dots{
+    --c2: rgb(133, 174, 194);
+    background-image: radial-gradient(var(--c2) 2px, transparent 2px);
+    background-size: 40px 40px;
 }
 
 .cotton-candy{
-  background: linear-gradient(90deg, rgba(162,227,228,1) 0%, rgba(238,220,179,1) 100%);
+  background: linear-gradient(90deg, rgb(181, 233, 189) 0%, rgb(230, 195, 165) 100%);
 }
+

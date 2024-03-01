@@ -3,6 +3,7 @@ import connectDB from "@/utils/connect";
 import Listing from "@/models/listingmodel";
 import {Formidable} from "formidable";
 import { v2 as cloudinary } from "cloudinary";
+import enableCors from "@/middleware/cors";
 
 /**
  * Handler for CRUD operations on listings.
@@ -20,9 +21,12 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ): Promise<void> {
+
   const { method } = req;
 
   await connectDB();
+
+  enableCors(req, res);
 
   switch (method) {
     case 'GET':
