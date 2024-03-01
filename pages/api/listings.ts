@@ -22,11 +22,9 @@ export default async function handler(
   res: NextApiResponse
 ): Promise<void> {
 
-  const { method } = req;
-
-  await connectDB();
-
   enableCors(req, res);
+  const { method } = req;
+  await connectDB();
 
   switch (method) {
     case 'GET':

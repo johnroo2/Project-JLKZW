@@ -219,7 +219,7 @@ export default function Index() {
             </Col>
             <Col span={24}>
               <Item name="image" label="Image">
-                <Upload name="file" maxCount={1} fileList={existingFileList}
+                <Upload name="file" maxCount={1} fileList={existingFileList} action="/api/noop"
                 onChange={(info) => {
                   setExistingFileList([...info.fileList]);
                 }}>
