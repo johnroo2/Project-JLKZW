@@ -218,7 +218,7 @@ export default function Index() {
               </Item>
             </Col>
             <Col span={24}>
-              <Item name="image" label="Image">
+              <Item name="image" label="Image"> 
                 <Upload name="file" maxCount={1} fileList={existingFileList} action="/api/no-op"
                 onChange={(info) => {
                   setExistingFileList([...info.fileList]);
