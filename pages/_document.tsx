@@ -5,9 +5,6 @@ export default function Document() {
     <Html lang="en">
       <Head />
       <body className="relative cotton-candy">
-        <div className="absolute inset-0 dots">
-
-        </div>
         <Main />
         <NextScript />
       </body>

@@ -3,6 +3,7 @@ import { useForm } from 'antd/lib/form/Form';
 import { useEffect, useState } from "react";
 import { AiFillEdit, AiFillDelete } from "react-icons/ai";
 import axios from "axios";
+import { useWindowSize } from "@uidotdev/usehooks";
 
 const {Title} = Typography
 const {Item} = Form
@@ -17,6 +18,8 @@ export default function Index() {
   const [loading, setLoading] = useState<boolean>(false);
   const [data, setData] = useState<any[]>([]);
   const [form] = useForm();
+
+  const {width} = useWindowSize()
 
   useEffect(() => {
     form.resetFields();
@@ -52,7 +55,7 @@ export default function Index() {
     catch(err){
       console.error(err)
     }
-    setLoading(false)
+    setTimeout(() => {setLoading(false)}, 500)
   }
 
   const handleSubmit = async (formValues: any) => {
@@ -69,7 +72,7 @@ export default function Index() {
         headers: {
           'Content-Type': 'multipart/form-data'
         },
-        timeout: 15000
+        timeout: 30000
       });
       message.success(`Successfully created: ${formValues.name}`);
     } catch (err) {
@@ -100,7 +103,7 @@ export default function Index() {
         headers: {
           'Content-Type': 'multipart/form-data'
         },
-        timeout: 15000
+        timeout: 30000
       });
       message.success(`Successfully modified: ${formvalues.name}`);
     }
@@ -118,7 +121,7 @@ export default function Index() {
 
   const handleDelete = async(id:any, title:string) => {
     try{
-      const res = await axios.delete("/api/listings", { data: { id }, timeout: 15000});
+      const res = await axios.delete("/api/listings", { data: { id }, timeout: 30000});
       message.success(`Successfully deleted: ${title}`)
     }
     catch(err){
@@ -128,18 +131,21 @@ export default function Index() {
     fetch();
   }
 
+  const isLarge = () => !width || width >= 1024
+
   return (
     <>
-    <div className="overflow-hidden flex mx-[15vw] h-[90vh] mt-[5vh]" data-aos="fade-down">
-      <Card className="w-full h-full p-8">
+    <div className="fixed top-0 left-0 w-screen h-screen dots"/>
+    <div className="overflow-hidden flex mx-[5vw] lg:mx-[10vw] 2xl:mx-[15vw] h-[90vh] mt-[5vh]" data-aos="fade-down">
+      <Card className="w-full h-full">
         <div className="grid"
         style={{
-          gridTemplateRows: "5rem calc(90vh - 12rem)"
+          gridTemplateRows: isLarge() ? "5rem calc(90vh - 8rem)" : "7.5rem calc(90vh - 10.5rem)"
         }}>
           <div>
-            <Title level={2} className="flex flex-row items-center justify-between w-full">
+            <Title level={isLarge() ? 3 : 2} className="flex flex-col gap-2 lg:gap-0 lg:flex-row items-center justify-between w-full bg-neutral-100 p-3 rounded">
               Dashboard
-              <Button type="primary" className="bg-sky-600 px-8" size="large"
+              <Button type="primary" className="bg-sky-600 px-8" size={isLarge() ? "large" : "middle"}
               onClick={() => {
                 setOpen(true)
               }}>
@@ -149,12 +155,15 @@ export default function Index() {
           </div>
           <div className="w-full h-full overflow-y-scroll overflow-x-hidden">
             {loading ? 
-            <Spin size="large"/>
+            <div className="flex flex-col gap-4 items-center justify-center h-full">
+              <Spin size="large"/>
+              Loading...
+            </div>
             :
             <div className="flex flex-col gap-4">
               {data.map((item:any, index:number) => {
                 return(
-                  <Card key={index} className="border-neutral-500">
+                  <Card key={index} className="border-neutral-500 shadow-md bg-neutral-50">
                     <Title level={4} className="flex flex-row items-center justify-between">
                         {item.name}
                         <div className="flex flex-row gap-2 items-center">
@@ -176,12 +185,12 @@ export default function Index() {
                           </Button>
                         </div>
                     </Title>
-                    <Row gutter={[40, 0]}>
-                      <Col span={item.image ? 16 : 24}>
+                    <Row gutter={[40, 12]}>
+                      <Col span={isLarge() ? (item.image ? 16 : 24) : 24}>
                         {item.about}
                       </Col>
                       {item.image && 
-                      <Col span={8} className="flex items-center justify-center">
+                      <Col span={isLarge() ? 8 : 24} className="flex items-center justify-center">
                         <Image src={item.image} className="w-full h-auto"/>
                       </Col>}
                     </Row>
